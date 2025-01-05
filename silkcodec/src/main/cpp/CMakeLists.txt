@@ -26,11 +26,22 @@ message(${CMAKE_BUILD_TYPE})
 
 
 
-# 添加源文件目录
+# 添加源文件目录 cpp文件，值为存储在变量中
+# key value = 目录 变量名称
 aux_source_directory(src SRC_LIST)
-message(${SRC_LIST})
+aux_source_directory(. NATIVE_LIB)
+message(${SRC_LIST}) # src/index.cpp
+message(${NATIVE_LIB}) # ./native-lib.cpp
+# 添加所有的SILK源文件
+file(GLOB SILK_SRC
+        libSilkCodec/silk/src/SILK_SDK_SRC_ARM_v1.0.9/src/*.c
+)
+file(GLOB SILK_CODEC libSilkCodec/src/*.c) # decoder.c 和 encoder.c 文件
+message(${SILK_CODEC})
 
-# 包含头文件目录
+
+
+# 添加所有的头文件目录 h文件
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 #        ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -44,21 +55,21 @@ link_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/${ANDROID_ABI}
         ${CMAKE_CURRENT_BINARY_DIR}
 )
-
-# 收集 SILK 源文件
-file(GLOB SILK_SRC
-        libSilkCodec/silk/src/SILK_SDK_SRC_ARM_v1.0.9/src/*.c
-)
-
+# CMAKE_CURRENT_SOURCE_DIR: 代码内置的库文件目录，当前项目暂时没有
+# CMAKE_CURRENT_BINARY_DIR：当前项目交叉编译生成的库文件目录
+message(${CMAKE_CURRENT_SOURCE_DIR})
+message(${CMAKE_CURRENT_BINARY_DIR})
 
 
-# 创建silk-codec共享库 添加所有的C和C++文件
+
+# 创建silk-codec共享库 添加所有的C和C++源文件
 add_library(silk-codec SHARED
-        native-lib.cpp
-        src/index.cpp
+        ${SRC_LIST}
+        ${NATIVE_LIB}
         ${SILK_SRC}
-        libSilkCodec/src/encoder.c
-        libSilkCodec/src/decoder.c
+        ${SILK_CODEC}
+#        libSilkCodec/src/encoder.c
+#        libSilkCodec/src/decoder.c
 )
 
 # 查找 Android 日志库

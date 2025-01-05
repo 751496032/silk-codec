@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+//    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -54,6 +54,6 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.mobile.ffmpeg
-//    implementation project(":silkcodec")
+    implementation project(":silkcodec")
 
 }
